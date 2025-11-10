@@ -1,16 +1,25 @@
-# dito_e_feito
+# Dito e Feito
 
-A new Flutter project.
+## Descrição
+Aplicativo de lista de tarefas desenvolvido em Flutter, que permite ao usuário organizar suas atividades diárias, marcar tarefas como concluídas, editar e excluir tarefas existentes.
 
-## Getting Started
+## Funcionalidades
+- Criar nova tarefa
+- Listar tarefas existentes
+- Marcar tarefas como concluídas
+- Editar tarefas
+- Excluir tarefas
 
-This project is a starting point for a Flutter application.
+## Estrutura do projeto
+- `lib/` → Código-fonte do aplicativo
+  - `screens/` → Telas do aplicativo (Home, Adicionar Tarefa, Editar Tarefa)
+  - `models/` → Modelos de dados (Task)
+  - `main.dart` → Entrada principal do aplicativo
+- `android/`, `ios/`, `web/`, `windows/`, etc → Configurações do Flutter para cada plataforma
+- `pubspec.yaml` → Gerenciamento de dependências
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Como rodar
+1. Instalar o [Flutter SDK](https://flutter.dev/docs/get-started/install)
+2. Clonar o repositório
+   ```bash
+   git clone https://github.com/nicolevieira99/Dito-e-Feito.git
