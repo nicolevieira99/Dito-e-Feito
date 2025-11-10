@@ -6,8 +6,8 @@ Aplicativo de lista de tarefas desenvolvido em Flutter, que permite ao usuário 
 ## Funcionalidades
 - Criar nova tarefa
 - Listar tarefas existentes
+- Edição de tarefa
 - Marcar tarefas como concluídas
-- Editar tarefas
 - Excluir tarefas
 
 ## Estrutura do projeto
