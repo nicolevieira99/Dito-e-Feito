@@ -1,58 +1,68 @@
 import 'package:flutter/material.dart';
-import 'add_task_screen.dart';
-import 'edit_task_screen.dart';
 import '../models/task.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Task> tarefas = [];
+  final List<Task> tarefas = [];
 
-  void adicionarTarefa(String novaTarefa) {
+  void _adicionarTarefa(String titulo) {
+    if (titulo.isEmpty) return;
     setState(() {
-      tarefas.add(Task(titulo: novaTarefa));
+      tarefas.add(Task(titulo: titulo));
     });
   }
 
-  void editarTarefa(int index, String novoTexto) {
-    setState(() {
-      tarefas[index].titulo = novoTexto;
-    });
-  }
-
-  void excluirTarefa(int index) {
+  void _removerTarefa(int index) {
     setState(() {
       tarefas.removeAt(index);
     });
   }
 
-  void marcarComoConcluida(int index, bool valor) {
+  void _toggleTarefa(int index) {
     setState(() {
-      tarefas[index].concluida = valor;
+      tarefas[index].concluida = !tarefas[index].concluida;
     });
   }
 
-  void abrirTelaAdicionar() async {
-    final novaTarefa = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AddTaskScreen()),
-    );
-    if (novaTarefa != null) adicionarTarefa(novaTarefa);
-  }
-
-  void abrirTelaEditar(int index) async {
-    final tarefaEditada = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditTaskScreen(
-          textoInicial: tarefas[index].titulo,
+  void _mostrarDialog() {
+    String novaTarefa = '';
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Nova Tarefa'),
+        content: TextField(
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: 'Digite a tarefa',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (value) => novaTarefa = value,
+          onSubmitted: (_) {
+            _adicionarTarefa(novaTarefa);
+            Navigator.of(context).pop();
+          },
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _adicionarTarefa(novaTarefa);
+              Navigator.of(context).pop();
+            },
+            child: const Text('Adicionar'),
+          ),
+        ],
       ),
     );
-    if (tarefaEditada != null) editarTarefa(index, tarefaEditada);
   }
 
   @override
@@ -60,53 +70,51 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dito e Feito'),
-        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
       ),
       body: tarefas.isEmpty
           ? const Center(
               child: Text(
-                'Nenhuma tarefa ainda. Adicione uma!',
-                style: TextStyle(fontSize: 16),
+                'Nenhuma tarefa ainda!',
+                style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
             )
           : ListView.builder(
               itemCount: tarefas.length,
               itemBuilder: (context, index) {
+                final tarefa = tarefas[index];
                 return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  color: tarefa.concluida ? Colors.grey[300] : Colors.blue[50],
+                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   child: ListTile(
                     leading: Checkbox(
-                      value: tarefas[index].concluida,
-                      onChanged: (valor) => marcarComoConcluida(index, valor!),
+                      value: tarefa.concluida,
+                      onChanged: (_) => _toggleTarefa(index),
+                      activeColor: Colors.green,
                     ),
-                    title: Text(
-                      tarefas[index].titulo,
+                    title: AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 300),
                       style: TextStyle(
-                        decoration: tarefas[index].concluida
+                        decoration: tarefa.concluida
                             ? TextDecoration.lineThrough
-                            : null,
+                            : TextDecoration.none,
+                        color: tarefa.concluida ? Colors.grey : Colors.black,
+                        fontSize: 18,
                       ),
+                      child: Text(tarefa.titulo),
                     ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit, color: Colors.deepPurple),
-                          onPressed: () => abrirTelaEditar(index),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => excluirTarefa(index),
-                        ),
-                      ],
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _removerTarefa(index),
                     ),
                   ),
                 );
               },
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: abrirTelaAdicionar,
-        child: const Icon(Icons.add),
+        onPressed: _mostrarDialog,
+        backgroundColor: Colors.blueAccent,
+        child: const Icon(Icons.add, size: 32),
       ),
     );
   }
