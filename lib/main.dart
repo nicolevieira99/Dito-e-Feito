@@ -5,19 +5,37 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool isDarkMode = false;
+
+  void toggleTheme() {
+    setState(() => isDarkMode = !isDarkMode);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'Dito e Feito',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.grey[100],
+        brightness: Brightness.light,
+        primarySwatch: Colors.deepPurple,
       ),
-      home: const HomeScreen(),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.deepPurple,
+      ),
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: HomeScreen(
+        isDarkMode: isDarkMode,
+        onToggleDarkMode: toggleTheme,
+      ),
     );
   }
 }
